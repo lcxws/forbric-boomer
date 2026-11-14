@@ -44,25 +44,13 @@
 ### 步骤
 
 1. 按 [Forbric 的安装说明](https://github.com/Ray-T-r/Minecraft-Forbric-mod-loader) 装好 `26.2-forbric`。
-2. 把 [`dist/forbric-boomer-1.0.0.jar`](dist/forbric-boomer-1.0.0.jar) 放进这个实例的 `mods` 文件夹。
+2. 下载 [`forbric-boomer-1.0.0.jar`](https://github.com/lcxws/forbric-boomer/releases/latest) 放进这个实例的 `mods` 文件夹。
 3. 用 `26.2-forbric` 启动。
 4. 看到“检测到forbric加载器，不受支持的加载器，请将模组加载器改为forbric！”的弹窗，说明安装成功。
 5. 点“改为 Forbric”。你会看到“切换成功”。然后弹窗还在。恭喜，你已经掌握了本模组的全部玩法。
 
 > 别在有你珍贵存档的实例里装。它不会写坏存档，但它会稳定地阻止游戏启动。
 > 想卸载？删掉 jar。它会带走它的弹窗，带不走你的世界。
-
-### 没有 Forbric，只想看弹窗
-
-```bash
-java -jar dist/forbric-boomer-1.0.0.jar --force-forbric
-```
-
-终端版：
-
-```bash
-java -jar dist/forbric-boomer-1.0.0.jar --force-forbric --console
-```
 
 ---
 
@@ -119,9 +107,8 @@ Linux / macOS：
 
 测试覆盖：
 
-- 强制 Forbric 模式输出原文，并以退出码 42 结束；
-- 非 Forbric 模式拒绝启动，并以退出码 43 结束；
-- 用假 `ForbricBranding` 类跑真正的 `preLaunch` 入口，确认抛出 `ForbricDetected`；
+- 在 `preLaunch` 入口上放一个 `ForbricBranding` 类，确认抛出 `ForbricDetected`，并带上原文；
+- 同一个入口不放 Forbric 标记，确认抛出 `NotForbric`，并要求用 Forbric 启动；
 - jar 里包含 `fabric.mod.json`，且不包含编译替身。
 
 ---

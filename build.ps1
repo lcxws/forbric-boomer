@@ -18,8 +18,9 @@ Copy-Item src\main\resources\* build\classes -Recurse -Force
 
 $jar = "dist\forbric-boomer-1.0.0.jar"
 if (Test-Path $jar) { Remove-Item $jar -Force }
-& jar --create --file $jar --main-class io.github.lcxws.forbricboomer.Boomer -C build\classes .
+& jar --create --file $jar -C build\classes .
 if ($LASTEXITCODE -ne 0) { throw "jar failed" }
 
 Write-Host "built $jar"
+
 

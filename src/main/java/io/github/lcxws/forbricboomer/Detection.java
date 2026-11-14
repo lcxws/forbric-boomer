@@ -75,15 +75,5 @@ final class Detection {
 
 		return new Detection(forbric, List.copyOf(evidence), loaderClass, gameVersion);
 	}
-
-	/** Demo mode. No Minecraft, no Forbric, just the popup the joke is about. */
-	static Detection forced() {
-		return new Detection(true, List.of(
-				"--force-forbric：演示模式，假装这里就是 Forbric。",
-				"假装发现类 net.forbric.kernel.util.ForbricBranding",
-				"假装 isModLoaded(\"forbric\") = true",
-				"结论：这就是 Forbric（演示）。"
-		), "net.forbric.kernel.fabric.KernelFabricLoader (demo)", "26.2");
-	}
 }
 

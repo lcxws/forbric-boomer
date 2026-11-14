@@ -1,14 +1,10 @@
 package io.github.lcxws.forbricboomer;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * The loader-agnostic half of Forbric Boomer: detection, the popup, the report and the refusal.
  *
- * <p>This class deliberately does not reference Fabric Loader in its own signature. {@code java -jar} can run it
- * without any loader on the classpath, which is how the demo and the tests reach the joke. The Fabric entrypoint
- * lives in {@link ForbricBoomer}, which is only ever loaded by an actual loader.
+ * <p>This class deliberately does not reference Fabric Loader in its own signature. The Fabric entrypoint lives in
+ * {@link ForbricBoomer}, which is only ever loaded by an actual loader.
  */
 public final class Boomer {
 	public static final String VERSION = "1.0.0";
@@ -40,27 +36,6 @@ public final class Boomer {
 			throw new ForbricDetected(phase);
 		}
 		throw new NotForbric(phase);
-	}
-
-	/**
-	 * Standalone demo: {@code java -jar forbric-boomer-1.0.0.jar --force-forbric}.
-	 * Exists so the joke can be inspected without a Minecraft install, and so the build can be tested.
-	 */
-	public static void main(String[] args) {
-		List<String> flags = Arrays.asList(args);
-		if (flags.contains("--console")) {
-			System.setProperty("forbricboomer.console", "true");
-		}
-
-		Detection detection = flags.contains("--force-forbric") ? Detection.forced() : Detection.run();
-		BoomerReport.write(detection, "standalone");
-		BoomerUi.present(detection, "standalone");
-
-		System.out.println(detection.forbric
-				? "[forbric-boomer] 已拒绝启动：Forbric 不受支持。请将模组加载器改为 forbric。"
-				: "[forbric-boomer] 已拒绝启动：没有检测到 Forbric。本模组必须用 Forbric 启动。");
-		System.out.flush();
-		System.exit(detection.forbric ? 42 : 43);
 	}
 
 	/** Thrown on Forbric, after the dialog. The message is the required sentence, so logs carry it too. */
