@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "forbric-boomer",
+  "version": "1.0.0",
+  "name": "Forbric Boomer",
+  "description": "检测到 Forbric 后拒绝启动。必须用 Forbric 启动。",
+  "authors": [
+    "lcxws",
+    "叛逆大肥鱼"
+  ],
+  "contact": {
+    "homepage": "https://github.com/lcxws/forbric-boomer",
+    "sources": "https://github.com/lcxws/forbric-boomer"
+  },
+  "license": "MIT",
+  "icon": "assets/forbric-boomer/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "preLaunch": [
+      "io.github.lcxws.forbricboomer.ForbricBoomer"
+    ],
+    "main": [
+      "io.github.lcxws.forbricboomer.ForbricBoomer"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "java": ">=17"
+  }
+}

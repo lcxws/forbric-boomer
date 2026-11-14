@@ -1,0 +1,7 @@
+build/
+crash-reports/
+qa-popup.png
+*.class
+.idea/
+.vscode/
+.DS_Store
