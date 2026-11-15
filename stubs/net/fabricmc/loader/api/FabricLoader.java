@@ -3,17 +3,18 @@ package net.fabricmc.loader.api;
 import java.nio.file.Path;
 
 /**
- * Compile-time stand-in for Fabric Loader's abstract class. The runtime class is the real one, from Forbric or
- * Fabric Loader; only these signatures are used, so no loader jar is needed to build this mod offline.
+ * Compile-time stand-in for Fabric Loader's public API type. The real type is an interface; keeping this an
+ * interface matters at run time, because a class with the same name fails verification with
+ * {@link IncompatibleClassChangeError} on an actual Fabric or Forbric launch.
  */
-public abstract class FabricLoader {
-	public static FabricLoader getInstance() {
+public interface FabricLoader {
+	static FabricLoader getInstance() {
 		throw new UnsupportedOperationException("compile-time stub");
 	}
 
-	public abstract boolean isModLoaded(String id);
+	boolean isModLoaded(String id);
 
-	public abstract String getRawGameVersion();
+	String getRawGameVersion();
 
-	public abstract Path getGameDir();
+	Path getGameDir();
 }

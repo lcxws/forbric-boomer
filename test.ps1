@@ -14,6 +14,9 @@ New-Item -ItemType Directory build\test-classes, build\fake-classes -Force | Out
 & javac --release 17 -encoding UTF-8 -cp "build\classes;build\stubs" -d build\test-classes test\java\EntrypointHarness.java
 & javac --release 17 -encoding UTF-8 -d build\fake-classes test\fake\net\forbric\kernel\util\ForbricBranding.java
 
+$stubShape = (& javap -classpath build\stubs net.fabricmc.loader.api.FabricLoader 2>&1 | Out-String)
+Assert-True ($stubShape.Contains("interface")) "FabricLoader stub must be an interface, not a class"
+
 # --- real preLaunch entrypoint, Forbric marker present: refuse and carry the sentence ---
 $cp = "build\classes;build\test-classes;build\fake-classes;build\stubs"
 $out = (& java -cp $cp EntrypointHarness 2>&1 | Out-String)
@@ -28,6 +31,7 @@ $out2 = (& java -cp $cpNoForbric EntrypointHarness 2>&1 | Out-String)
 Write-Host $out2
 Assert-True ($out2.Contains("HARNESS_RESULT=NotForbric")) "entrypoint should throw NotForbric without Forbric"
 Assert-True ($out2.Contains("未检测到 Forbric")) "non-Forbric message missing"
+Assert-True (-not $out2.Contains("检测到forbric加载器")) "non-Forbric launch must not print the Forbric sentence"
 
 # --- jar hygiene ---
 & jar --list --file dist\forbric-boomer-1.0.0.jar | Out-File build\jar-list.txt -Encoding utf8

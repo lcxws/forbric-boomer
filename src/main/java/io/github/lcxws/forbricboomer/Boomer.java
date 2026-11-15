@@ -13,6 +13,10 @@ public final class Boomer {
 	public static final String REQUIRED_MESSAGE =
 			"检测到forbric加载器，不受支持的加载器，请将模组加载器改为forbric！";
 
+	/** What a non-Forbric launch gets instead: the other half of the joke, and never the Forbric sentence. */
+	public static final String NOT_FORBRIC_MESSAGE =
+			"未检测到 Forbric。本模组必须用 Forbric 启动。";
+
 	private static volatile boolean boomed;
 	private static volatile boolean lastWasForbric;
 

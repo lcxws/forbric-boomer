@@ -53,8 +53,10 @@ final class BoomerReport {
 		out.append("// 你没有看错，这是一份崩溃报告，尽管游戏还没来得及开始。\n\n");
 		out.append("时间: ").append(LocalDateTime.now()).append('\n');
 		out.append("阶段: ").append(phase).append('\n');
-		out.append("描述: Forbric Boomer 检测到不受支持的模组加载器\n\n");
-		out.append(Boomer.REQUIRED_MESSAGE).append("\n\n");
+		out.append("描述: ").append(detection.forbric
+				? "Forbric Boomer 检测到不受支持的模组加载器"
+				: "Forbric Boomer 未检测到 Forbric").append("\n\n");
+		out.append(detection.forbric ? Boomer.REQUIRED_MESSAGE : Boomer.NOT_FORBRIC_MESSAGE).append("\n\n");
 		out.append("结论: ").append(detection.forbric ? "FORBRIC_UNSUPPORTED" : "NOT_FORBRIC").append('\n');
 		out.append("加载器实现类: ").append(detection.loaderClass).append('\n');
 		out.append("游戏版本: ").append(detection.gameVersion).append('\n');

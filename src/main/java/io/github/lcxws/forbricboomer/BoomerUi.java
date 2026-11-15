@@ -26,6 +26,7 @@ import javax.swing.UIManager;
 /** The popup. Console output is the headless fallback, not the main event. */
 final class BoomerUi {
 	private static final String MESSAGE = Boomer.REQUIRED_MESSAGE;
+	private static final String NOT_FORBRIC_MESSAGE = Boomer.NOT_FORBRIC_MESSAGE;
 	private static final Color BG = new Color(0x15171C);
 	private static final Color PANEL = new Color(0x1E2129);
 	private static final Color RED = new Color(0xC62828);
@@ -64,7 +65,7 @@ final class BoomerUi {
 				+ " · 游戏: " + detection.gameVersion);
 		System.out.println();
 		System.out.println("================================================================");
-		System.out.println("  " + MESSAGE);
+		System.out.println("  " + (detection.forbric ? MESSAGE : NOT_FORBRIC_MESSAGE));
 		System.out.println("================================================================");
 		System.out.println();
 		for (String line : detection.evidence) {
@@ -85,7 +86,10 @@ final class BoomerUi {
 		}
 
 		JDialog dialog = new JDialog((java.awt.Frame) null,
-				"Forbric Boomer — 兼容性检查失败", true);
+				detection.forbric
+						? "Forbric Boomer — 兼容性检查失败"
+						: "Forbric Boomer — 未检测到 Forbric",
+				true);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.getContentPane().setBackground(BG);
 
@@ -97,7 +101,9 @@ final class BoomerUi {
 		JLabel brand = new JLabel("FORBRIC BOOMER  ·  v" + Boomer.VERSION);
 		brand.setForeground(Color.WHITE);
 		brand.setFont(new Font(Font.MONOSPACED, Font.BOLD, 13));
-		JLabel title = new JLabel("兼容性检查失败：不受支持的模组加载器");
+		JLabel title = new JLabel(detection.forbric
+				? "兼容性检查失败：不受支持的模组加载器"
+				: "未检测到 Forbric：本模组拒绝启动");
 		title.setForeground(Color.WHITE);
 		title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 19));
 		header.add(brand);
@@ -109,8 +115,9 @@ final class BoomerUi {
 		body.setBackground(BG);
 		body.setBorder(BorderFactory.createEmptyBorder(14, 18, 8, 18));
 
-		JLabel message = new JLabel("<html><div style='width:600px'>" + MESSAGE + "</div></html>");
-		message.setForeground(new Color(0xFFB4B4));
+		String headline = detection.forbric ? MESSAGE : NOT_FORBRIC_MESSAGE;
+		JLabel message = new JLabel("<html><div style='width:600px'>" + headline + "</div></html>");
+		message.setForeground(detection.forbric ? new Color(0xFFB4B4) : new Color(0xFFD180));
 		message.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
 		body.add(message, BorderLayout.NORTH);
 
@@ -167,10 +174,12 @@ final class BoomerUi {
 
 		JPanel buttons = new JPanel();
 		buttons.setBackground(BG);
-		JButton switchButton = new JButton("改为 Forbric");
+		JButton switchButton = new JButton(detection.forbric ? "改为 Forbric" : "改用 Forbric");
 		JButton retryButton = new JButton("重试");
 		JButton exitButton = new JButton("退出游戏");
-		switchButton.setToolTipText("把模组加载器改为 Forbric（然后回到同一个弹窗）");
+		switchButton.setToolTipText(detection.forbric
+				? "把模组加载器改为 Forbric（然后回到同一个弹窗）"
+				: "先安装 Forbric，再用 Forbric 启动本模组");
 		retryButton.setToolTipText("再检查一次，看看 Forbric 会不会消失");
 		exitButton.setToolTipText("退出。反正也启动不了。");
 		buttons.add(switchButton);
@@ -181,6 +190,14 @@ final class BoomerUi {
 		dialog.add(body, BorderLayout.CENTER);
 
 		switchButton.addActionListener(e -> {
+			if (!detection.forbric) {
+				JOptionPane.showMessageDialog(dialog,
+						"<html><div style='width:420px'><b>未检测到 Forbric。</b><br><br>"
+								+ "本模组必须用 Forbric 启动。请先安装 Forbric，再用 Forbric 启动。</div></html>",
+						"需要 Forbric", JOptionPane.WARNING_MESSAGE);
+				status.setText("当前加载器不是 Forbric。请安装 Forbric 后再试。");
+				return;
+			}
 			int[] attempts = {0};
 			JOptionPane.showMessageDialog(dialog,
 					"<html><div style='width:420px'><b>正在把模组加载器改为 Forbric…</b><br><br>"
